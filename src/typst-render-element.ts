@@ -76,10 +76,13 @@ export default class TypstRenderElement extends HTMLElement {
                     } else if (typeof result == "string" && this.format == "svg") {
                         this.innerHTML = result;
                         let child = (this.firstElementChild as SVGElement);
-                        child.setAttribute("width", child.getAttribute("width")!.replace("pt", ""))
-                        child.setAttribute("height", child.getAttribute("height")!.replace("pt", ""))
-                        child.setAttribute("width", `${this.firstElementChild!.clientWidth /fontSize}em`);
-                        child.setAttribute("height", `${this.firstElementChild!.clientHeight /fontSize}em`);
+
+                        let styles= window.getComputedStyle(child);
+                        let width = parseFloat(child.getAttribute("width")!.replace("pt", "")) + parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+                        let height = parseFloat(child.getAttribute("height")!.replace("pt", "")) + parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+                        child.setAttribute("width", `${width / fontSize}em`);
+                        child.setAttribute("height", `${height / fontSize}em`);
+                        
                     }
                 } catch (error) {
                     // For some reason it is uncaught so remove "Uncaught "
